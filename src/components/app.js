@@ -28,7 +28,7 @@ class App extends React.Component {
     }
 
     sendValueToMobileApp = (value) => {
-        window.open(`mathInput:?encodeURIComponent(${value})`, "_self")
+        window.open(`mathInput:?${encodeURIComponent(value)}`, "_self")
     }
 
     componentDidUpdate = (prevProps, prevState) => {
