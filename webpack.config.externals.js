@@ -10,19 +10,13 @@ module.exports = {
         libraryTarget: 'umd',
     },
     module: {
-        loaders: [
-            {
-                test: /\.jsx?$/,
-                loader: 'babel',
-                query: {
-                    presets: [
-                        "@babel/env",
-                        "@babel/react",
-                    ],
-                },
-                exclude: /(node_modules|mathquill)/,
-            },
-        ],
+        rules: [{
+            test: /\.jsx?$/,
+            exclude: /(node_modules|mathquill)/,
+            use: {
+                loader: 'babel-loader',
+            }
+        }]
     },
     // TODO(alex): Pick just one type below, e.g. commonjs2
     externals: {
