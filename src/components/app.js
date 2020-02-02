@@ -13,12 +13,35 @@ class App extends React.Component {
         keypadType: consts.KeypadTypes.EXPRESSION,
     };
 
-    handleChange = (e) => {
+    componentDidMount = () => {
+        window.setMathInputValue = this.setValue;
+    }
+
+    setValue = (value, callback) => {
+        window.mathInputValue = value;
+        if (callback) {
+            this.setState({value}, callback);
+        } else {
+            this.setState({value});
+        }
+        this.sendValueToMobileApp(value);
+    }
+
+    sendValueToMobileApp = (value) => {
+        window.open(`mathInput:?${encodeURIComponent(value)}`, "_self")
+    }
+
+    componentDidUpdate = (prevProps, prevState) => {
+        if (prevState.keypadElement !== this.state.keypadElement) {
+            this.configureKeypad();
+        }
+    }
+
+    configureKeypad = () => {
         this.state.keypadElement.configure({
-            keypadType: e.target.value,
+            keypadType: this.state.keypadType,
             extraKeys: ["x", "y", "PI", "THETA"],
         });
-        this.setState({keypadType: e.target.value});
     };
 
     render() {
@@ -27,24 +50,12 @@ class App extends React.Component {
                 <KeypadInput
                     value={this.state.value}
                     keypadElement={this.state.keypadElement}
-                    onChange={(value, cb) => this.setState({value}, cb)}
+                    onChange={(value, callback) => {
+                        this.setValue(value, callback);
+                    }}
                     onFocus={() => this.state.keypadElement.activate()}
                     onBlur={() => this.state.keypadElement.dismiss()}
                 />
-                <View style={styles.selectContainer}>
-                    Keypad type: 
-                    <select 
-                        onChange={this.handleChange}
-                        value={this.state.keypadType}
-                    >
-                        <option value={consts.KeypadTypes.FRACTION}>
-                            FRACTION
-                        </option>
-                        <option value={consts.KeypadTypes.EXPRESSION}>
-                            EXPRESSION
-                        </option>
-                    </select>
-                </View>
             </View>
             <Keypad
                 onElementMounted={node => {

@@ -9,27 +9,14 @@ module.exports = {
         library: 'math-input',
         libraryTarget: 'umd',
     },
-    plugins: [
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false,
-            },
-        }),
-    ],
     module: {
-        loaders: [
-            {
-                test: /\.jsx?$/,
-                loader: 'babel',
-                query: {
-                    presets: [
-                        "@babel/env",
-                        "@babel/react",
-                    ],
-                },
-                exclude: /(node_modules|mathquill)/,
-            },
-        ],
+        rules: [{
+            test: /\.jsx?$/,
+            exclude: /(node_modules|mathquill)/,
+            use: {
+                loader: 'babel-loader',
+            }
+        }]
     },
     // TODO(alex): Pick just one type below, e.g. commonjs2
     externals: {
